@@ -1,14 +1,67 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, Platform } from 'react-native';
+import { TabNavigator, StackNavigator } from 'react-navigation'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import reducer from './reducers'
+import Decks from './components/Decks'
+import NewDeck from './components/NewDeck'
+import { blue, white } from './utils/colors'
+import { Feather } from '@expo/vector-icons'
+import { Constants } from 'expo'
+
+function FlashCardsStatusBar ({ backgroundColor, ...props }) {
+  return (
+    <View style={{backgroundColor, height: Constants.statusBarHeight}}>
+      <StatusBar translucent backgroundColor={backgroundColor} {...props}/>
+    </View>
+  )
+}
+
+const Tabs = TabNavigator ({
+  Decks: {
+    screen: Decks,
+    navigationOptions: {
+      tabBarLabel: 'Decks',
+      tabBarIcon: ({ tintColor }) => <Feather name='folder' size={25} color={tintColor} />
+    }
+  },
+  NewDeck: {
+    screen: NewDeck,
+    navigationOptions: {
+      tabBarLabel: 'New Deck',
+      tabBarIcon: ({ tintColor }) => <Feather name='file-plus' size={25} color={tintColor} />
+    }
+  }
+},
+{
+  tabBarOptions: {
+    showIcon: true,
+    showLabel: true,
+    activeTintColor: Platform.OS === 'ios' ? blue : white,
+    style: {
+      height: 56,
+      backgroundColor: Platform.OS === 'ios' ? white : blue,
+      shadowOffset: {
+        width: 0,
+        height: 3,
+      },
+      shadowRadius: 6,
+      shadowOpacity: 1
+    }
+  }
+})
+
 
 export default class App extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
-      </View>
+      <Provider store={createStore(reducer)}>
+        <View style={styles.container}>
+          <FlashCardsStatusBar backgroundColor={blue} barStyle='light-content'/>
+          <Tabs />
+        </View>
+      </Provider>
     );
   }
 }
@@ -17,7 +70,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
   },
 });

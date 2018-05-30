@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, FlatList, TextInput, KeyboardAvoidingView, TouchableOpacity, Platform } from 'react-native'
+import { connect } from 'react-redux'
+import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, TouchableOpacity, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import { blue, white } from '../utils/colors'
+import { addDeck } from '../actions'
+import { submitDeck } from '../utils/api'
+import { NavigationActions } from 'react-navigation'
 
 class NewDeck extends Component {
 
@@ -12,44 +16,61 @@ class NewDeck extends Component {
     this.setState(() => ({
       deckName: text
     }))
-    console.log(this.state.input)
   }
   handlePress = () => {
-    alert(this.state.deckName)
+    const { deckName } = this.state
+    const deck = {
+      name: deckName,
+      cards: []
+    }
+    const data = {
+      deck,
+      id: deckName
+    }
+
+    this.props.submit({[deckName]: deck})
+    submitDeck({ deckName, deck })
+    this.setState(() => ({
+      deckName: ''
+    }))
+    this.toHome()
+  }
+  toHome = () => {
+    this.props.navigation.dispatch(NavigationActions.back({
+      key: 'NewDeck'
+    }))
   }
 
   render(){
     const { deckName } = this.state
     return(
-      <KeyboardAvoidingView behavior='padding' style={styles.container}>
-        <View style={styles.container}>
-          <Text style={styles.header}>
-            What is the title of your new deck?
-          </Text>
-        </View>
-        <View style={styles.container}>
-          <TextInput
-            placeholder="New Deck Name"
-            onChangeText={this.handleInputChange}
-            value={deckName}
-          />
-          <TouchableOpacity
-          style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.androidSubmitBtn}
-            onPress={this.handlePress}>
-            <Text style={styles.submitBtnText}>SUBMIT</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <KeyboardAvoidingView behavior='padding' style={styles.container}>
+          <View style={styles.container}>
+            <Text style={styles.header}>
+              What is the title of your new deck?
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="New Deck Name"
+              onChangeText={this.handleInputChange}
+              value={deckName}
+            />
+            <TouchableOpacity
+            style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.androidSubmitBtn}
+              onPress={this.handlePress}>
+              <Text style={styles.submitBtnText}>SUBMIT</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     )
   }
 }
 
-export default NewDeck
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
     marginTop: 20,
     marginBottom: 20
   },
@@ -67,6 +88,7 @@ const styles = StyleSheet.create({
   },
   androidSubmitBtn:{
     backgroundColor: blue,
+    marginRight: 15,
     padding: 10,
     paddingLeft: 30,
     paddingRight: 30,
@@ -82,9 +104,29 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   input: {
-     margin: 15,
-     height: 40,
-     borderColor: '#7a42f4',
-     borderWidth: 1
+    alignItems: 'center',
+    margin: 15,
+    padding: 10,
+    height: 60,
+    borderColor: blue,
+    borderWidth: 1,
+    borderRadius: 10
   },
 })
+
+function mapStateToProps(decks){
+  return {
+    decks
+  }
+}
+
+function mapDispatchToProps(dispatch){
+  return {
+    submit: (data) => dispatch(addDeck(data)),
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NewDeck)

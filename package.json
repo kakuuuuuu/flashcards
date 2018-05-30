@@ -24,6 +24,7 @@
     "react-native": "~0.55.2",
     "react-native-gesture-handler": "^1.0.1",
     "react-navigation": "1.5.9",
-    "react-redux": "^5.0.7"
+    "react-redux": "^5.0.7",
+    "uuid": "^3.2.1"
   }
 }

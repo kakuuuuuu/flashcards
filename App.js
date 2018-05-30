@@ -6,13 +6,16 @@ import { Provider } from 'react-redux'
 import reducer from './reducers'
 import Decks from './components/Decks'
 import NewDeck from './components/NewDeck'
+import Deck from './components/Deck'
+import NewCard from './components/NewCard'
+import Quiz from './components/Quiz'
 import { blue, white } from './utils/colors'
 import { Feather } from '@expo/vector-icons'
 import { Constants } from 'expo'
 
 function FlashCardsStatusBar ({ backgroundColor, ...props }) {
   return (
-    <View style={{backgroundColor, height: Constants.statusBarHeight}}>
+    <View style={{backgroundColor, height: Constants.statusBarHeight + 15}}>
       <StatusBar translucent backgroundColor={backgroundColor} {...props}/>
     </View>
   )
@@ -40,14 +43,51 @@ const Tabs = TabNavigator ({
     showLabel: true,
     activeTintColor: Platform.OS === 'ios' ? blue : white,
     style: {
-      height: 56,
+      height: 60,
       backgroundColor: Platform.OS === 'ios' ? white : blue,
       shadowOffset: {
         width: 0,
         height: 3,
       },
       shadowRadius: 6,
-      shadowOpacity: 1
+      shadowOpacity: 1,
+
+    }
+  }
+})
+
+const MainNavigator = StackNavigator({
+  Home: {
+    screen: Tabs,
+    navigationOptions: {
+      header: null,
+    }
+  },
+  Deck: {
+    screen: Deck,
+    navigationOptions: {
+      headerTintColor: white,
+      headerStyle: {
+        backgroundColor: blue,
+      }
+    }
+  },
+  NewCard: {
+    screen: NewCard,
+    navigationOptions: {
+      headerTintColor: white,
+      headerStyle: {
+        backgroundColor: blue,
+      }
+    }
+  },
+  Quiz: {
+    screen: Quiz,
+    navigationOptions: {
+      headerTintColor: white,
+      headerStyle: {
+        backgroundColor: blue,
+      }
     }
   }
 })
@@ -59,7 +99,7 @@ export default class App extends React.Component {
       <Provider store={createStore(reducer)}>
         <View style={styles.container}>
           <FlashCardsStatusBar backgroundColor={blue} barStyle='light-content'/>
-          <Tabs />
+          <MainNavigator />
         </View>
       </Provider>
     );

@@ -5,26 +5,39 @@ import {
   ADD_CARD
 } from '../actions'
 
-function decks (state = {}, action) {
+const INITIAL_STATE = {
+  Test: {
+    name: 'Test',
+    cards: [
+      {
+        question: 'Is the cake a lie?',
+        answer: 'Hell yeah'
+      }
+    ]
+  }
+}
+
+function decks (state = INITIAL_STATE, action) {
+  const { deck, card, id } = action
   switch(action.type) {
     case RECEIVE_DECKS:
       return {
         ...state,
-        ...action.decks
+        ...data.decks
       }
     case ADD_DECK:
       return {
         ...state,
-        [action.id]: action.deck
+        ...deck
       }
     case ADD_CARD:
       return {
         ...state,
-        [action.deckId]: {
-          ...state[action.deckId],
+        [id]: {
+          ...state[id],
           cards: [
-            ...state[action.deckId]['cards'],
-            action.cardId
+            ...state[id]['cards'],
+            card
           ]
         }
       }

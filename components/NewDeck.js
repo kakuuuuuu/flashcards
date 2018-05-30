@@ -29,7 +29,7 @@ class NewDeck extends Component {
     }
 
     this.props.submit({[deckName]: deck})
-    submitDeck({ deckName, deck })
+    submitDeck({ deck, key: deckName })
     this.setState(() => ({
       deckName: ''
     }))

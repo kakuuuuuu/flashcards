@@ -11,7 +11,7 @@ import NewCard from './components/NewCard'
 import Quiz from './components/Quiz'
 import { blue, white } from './utils/colors'
 import { Feather } from '@expo/vector-icons'
-import { Constants } from 'expo'
+import { Constants, Permissions } from 'expo'
 
 function FlashCardsStatusBar ({ backgroundColor, ...props }) {
   return (

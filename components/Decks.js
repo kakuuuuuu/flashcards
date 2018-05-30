@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Platform } from 'react-native'
 import DeckPreview from './DeckPreview'
 import { white } from '../utils/colors'
+import { fetchDecks } from '../utils/api'
+import { receiveDecks } from '../actions'
 
 class Decks extends Component {
 
@@ -20,7 +22,9 @@ class Decks extends Component {
       </View>
     )
   }
-
+  componentDidMount(){
+    fetchDecks().then(decks => this.props.getDecks(JSON.parse(decks)))
+  }
   render(){
     const {decks} = this.props
     return(
@@ -69,6 +73,13 @@ function mapStateToProps(decks){
   }
 }
 
+function mapDispatchToProps(dispatch){
+  return {
+    getDecks: (data) => dispatch(receiveDecks(data))
+  }
+}
+
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Decks)

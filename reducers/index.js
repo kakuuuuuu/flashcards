@@ -18,12 +18,12 @@ const INITIAL_STATE = {
 }
 
 function decks (state = INITIAL_STATE, action) {
-  const { deck, card, id } = action
+  const { deck, card, id, decks } = action
   switch(action.type) {
     case RECEIVE_DECKS:
       return {
         ...state,
-        ...data.decks
+        ...decks
       }
     case ADD_DECK:
       return {

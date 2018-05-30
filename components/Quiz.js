@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native'
-import { Shuffle } from '../utils/helpers'
+import { Shuffle, clearLocalNotification, setLocalNotification } from '../utils/helpers'
 import { blue, green, red, white } from '../utils/colors'
 import { NavigationActions } from 'react-navigation'
 
@@ -14,6 +14,7 @@ class Quiz extends Component {
     cards: [],
     score: 0,
     index: 0,
+    scored: false,
     flipped: false,
     completed: false
   }
@@ -30,19 +31,23 @@ class Quiz extends Component {
         score: score + 1,
       }))
     }
-    this.flipCard()
+    this.setState(() => ({
+      scored: true
+    }))
 
   }
   nextCard = () => {
-    console.log('NEXT')
     const { index, cards } = this.state
     if(index == cards.length - 1){
       this.setState(() => ({
         completed: true
       }))
+      clearLocalNotification()
+      .then(setLocalNotification())
     } else {
       this.setState(() => ({
         index: index + 1,
+        scored: false,
       }))
       this.flipCard()
     }
@@ -54,7 +59,7 @@ class Quiz extends Component {
       }))
     } else {
       this.setState(() => ({
-        flipped: false
+        flipped: false,
       }))
     }
   }
@@ -63,11 +68,12 @@ class Quiz extends Component {
       score: 0,
       index: 0,
       flipped: false,
-      completed: false
+      completed: false,
+      scored: false,
     }))
   }
   render () {
-    const { cards, index, flipped, score, completed } = this.state
+    const { cards, index, flipped, score, completed, scored } = this.state
     return (
       <View style={styles.container}>
         {flipped}
@@ -91,15 +97,9 @@ class Quiz extends Component {
                     <View style={styles.buttonContainer}>
                       <TouchableOpacity
                       style={Platform.OS === 'ios' ? [styles.iosBtn, styles.correctBtn] : [styles.androidBtn, styles.correctBtn]}
-                      onPress={() => this.addScore(true)}
+                      onPress={this.flipCard}
                       >
-                        <Text style={styles.btnText}>Correct</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                      style={Platform.OS === 'ios' ? [styles.iosBtn, styles.incorrectBtn] : [styles.androidBtn, styles.incorrectBtn]}
-                      onPress={() => this.addScore(false)}
-                      >
-                        <Text style={styles.btnText}>Incorrect</Text>
+                        <Text style={styles.btnText}>Show Answer</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -112,12 +112,32 @@ class Quiz extends Component {
                     </Text>
                   </View>
                   <View style={styles.buttonContainer}>
-                    <TouchableOpacity
-                    style={Platform.OS === 'ios' ? [styles.iosBtn, styles.nextBtn] : [styles.androidBtn, styles.nextBtn]}
-                    onPress={this.nextCard}
-                    >
-                      <Text style={styles.btnText}>Next</Text>
-                    </TouchableOpacity>
+                    {scored === false
+                      ?(
+                        <View>
+                          <TouchableOpacity
+                          style={Platform.OS === 'ios' ? [styles.iosBtn, styles.correctBtn] : [styles.androidBtn, styles.correctBtn]}
+                          onPress={() => this.addScore(true)}
+                          >
+                            <Text style={styles.btnText}>Correct</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                          style={Platform.OS === 'ios' ? [styles.iosBtn, styles.incorrectBtn] : [styles.androidBtn, styles.incorrectBtn]}
+                          onPress={() => this.addScore(false)}
+                          >
+                            <Text style={styles.btnText}>Incorrect</Text>
+                          </TouchableOpacity>
+                        </View>
+                      )
+                      :(
+                        <TouchableOpacity
+                        style={Platform.OS === 'ios' ? [styles.iosBtn, styles.nextBtn] : [styles.androidBtn, styles.nextBtn]}
+                        onPress={this.nextCard}
+                        >
+                          <Text style={styles.btnText}>Next</Text>
+                        </TouchableOpacity>
+                      )
+                    }
                   </View>
                   </View>
                 )

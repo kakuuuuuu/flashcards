@@ -13,13 +13,6 @@ Below you'll find information about performing common tasks. The most recent ver
   * [npm run eject](#npm-run-eject)
 * [What you're getting](#what-you're-getting)
 * [Components](#components)
-  * [App.js](#app)
-  * [Decks.js](#decks)
-  * [DeckPreview.js](#deckpreview)
-  * [Deck.js](#deck)
-  * [Quiz.js](#quiz)
-  * [NewDeck.js](#newdeck)
-  * [NewCard.js](#newcard)
 * [AsyncStorage](#asyncstorage)
 * [Writing and Running Tests](#writing-and-running-tests)
 * [Environment Variables](#environment-variables)
@@ -116,6 +109,14 @@ This will start the process of "ejecting" from Create React Native App's build s
 ## Components
 
 Created a separate subdirectory to organize which files were components.  Descriptions of each individual component are as follows:
+
+* [App.js](#app)
+* [Decks.js](#decks)
+* [DeckPreview.js](#deckpreview)
+* [Deck.js](#deck)
+* [Quiz.js](#quiz)
+* [NewDeck.js](#newdeck)
+* [NewCard.js](#newcard)
 
 ### App.js
 

@@ -2,6 +2,8 @@ This project was bootstrapped with [Create React Native App](https://github.com/
 
 Below you'll find information about performing common tasks. The most recent version of this guide is available [here](https://github.com/react-community/create-react-native-app/blob/master/react-native-scripts/template/README.md).
 
+This app has been tested on iOS 11.3 on an iPhone 6s and iPhone X as well as Android 8.1 on a Nexus 6P.
+
 ## Table of Contents
 
 * [Updating to New Releases](#updating-to-new-releases)

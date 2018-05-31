@@ -43,7 +43,6 @@ class NewCard extends Component {
         card
       ]
     }
-    console.log(newDeck)
     this.props.submit(card, deck.name)
     submitCard({ key: deck.name, deck: newDeck })
     this.setState(() => ({

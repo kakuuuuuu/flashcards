@@ -110,15 +110,15 @@ This will start the process of "ejecting" from Create React Native App's build s
 
 Created a separate subdirectory to organize which files were components.  Descriptions of each individual component are as follows:
 
-* [App.js](#app)
-* [Decks.js](#decks)
-* [DeckPreview.js](#deckpreview)
-* [Deck.js](#deck)
-* [Quiz.js](#quiz)
-* [NewDeck.js](#newdeck)
-* [NewCard.js](#newcard)
+* [`App.js`](#app)
+* [`Decks.js`](#decks)
+* [`DeckPreview.js`](#deckpreview)
+* [`Deck.js`](#deck)
+* [`Quiz.js`](#quiz)
+* [`NewDeck.js`](#newdeck)
+* [`NewCard.js`](#newcard)
 
-### App.js
+### `App.js`
 
 Base component that sets up the navigation for the rest of the components.  Contains a StatusBar, StackNavigator and a nested TabNavigator.  This component also sets up the Provider and store for Redux.
 - categories: Array containing all category objects
@@ -127,31 +127,31 @@ Base component that sets up the navigation for the rest of the components.  Cont
 - getAllCategories: Fetches all categories from store
 - submitPost: Dispatch action to create new post
 
-### Decks.js
+### `Decks.js`
 
 Default home component used in the TabNavigator.  Contains a FlatList using an array of decks fetched from the Redux store and loads data from AsyncStorage upon mounting.  Each item in the array renders a DeckPreview component.  This component has the following props:
 - decks: Array of deck objects fetched from the store.
 - getDecks: Calls action creator that uses data returned from AsyncStorage to load the store.
 
-### DeckPreview.js
+### `DeckPreview.js`
 
 Pure component used in Decks.js to display name and card count of a deck for use in a FlatList.  This component is a TouchableOpacity that will open a detailed stack view when touched.  This component has the following props:
 - name: Name of deck.
 - cards: Array of cards.
 
-### Deck.js
+### `Deck.js`
 
 Component used to access detailed options for an individual deck.  Displays name, card count and the following buttons: Add Card, Quiz and Delete.  Add Card will open a NewCard stack view, Quiz will open a Quiz stack view and delete will remove the deck from AsyncStorage and the store.  This component has the following props:
 - deck: Deck object fetched from store (used in place of deck provided by params to show accurate update when card is added).
 - remove: Calls action creator that removes deck from the store by id.
 - handleDelete: Function to delete deck from AsyncStorage, remove from the store and go back to previous stack.
 
-### Quiz.js
+### `Quiz.js`
 
 Component that individually displays all current cards in a deck.  Upon mounting cards array is stored in state and shuffled.  Initially component prompts the user with the first card's question with a button to reveal the answer.  Touching the button will show the answer string and prompt the user to touch either correct or incorrect buttons.  Touching either button hides both and reveals a next button, which will show the next card.  When the user has gone through all the cards, the score will show and prompt the user to touch the restart or go back button.  Restart will reset the quiz and go back will go back to the main deck view.  This component is provided the following data:
 - deck: Deck object provided by the StackNavigator as a parameter.
 
-### NewDeck.js
+### `NewDeck.js`
 
 Component accessed through the TabNavigator.  Contains a TextInput and button.  String from the TextInput is used to create a deck object with an empty cards array, which is saved to AsyncStorage and Redux Store.  This component has the following props, functions:
 - submit: Calls action creator to submit deck object to redux store.
@@ -159,7 +159,7 @@ Component accessed through the TabNavigator.  Contains a TextInput and button.  
 - handlePress: Creates deck object and saves to AsyncStorage and Store, then calls toDeck.
 - toDeck: Opens stack view for new deck and changes back route to Decks.js.
 
-### NewCard.js
+### `NewCard.js`
 
 Component accessed via Deck.js as a stack.  Contains two TextInputs and a button.  Strings from the TextInputs are used to create a card object, which is added to a copy of the deck object provided from the previous stack.  This new deck object is used to update AsyncStorage and the store. This component has the following props, functions:
 - deck: Deck object provided by the StackNavigator as a parameter.

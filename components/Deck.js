@@ -13,6 +13,11 @@ class Deck extends Component {
       title: deck.name
     }
   }
+  /*
+    * Handles deleting deck
+    * Removes deck from AsyncStorage then Store
+    * Goes back to previous screen on stack
+  */
   handleDelete = () => {
     const { deck } = this.props
     removeDeck(deck.name)

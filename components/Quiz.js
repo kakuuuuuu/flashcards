@@ -23,7 +23,11 @@ class Quiz extends Component {
       cards: Shuffle(this.props.navigation.state.params.deck.cards)
     }))
   }
-
+  /*
+    * Increments score
+    * status - correct or incorrect bool
+    * Updates score/scored status in state
+  */
   addScore = (status) => {
     const score = this.state.score
     if(status === true){
@@ -34,8 +38,12 @@ class Quiz extends Component {
     this.setState(() => ({
       scored: true
     }))
-
   }
+  /*
+    * Goes to next card
+    * Updates state to increment index to next card
+    * If index is equal to the amount of cards - 1, updates completed state to true to end quiz
+  */
   nextCard = () => {
     const { index, cards } = this.state
     if(index == cards.length - 1){
@@ -52,6 +60,11 @@ class Quiz extends Component {
       this.flipCard()
     }
   }
+  /*
+    * Flips card
+    * Shows answer if unflipped
+    * Resets if switched to next card
+  */
   flipCard = () => {
     if(this.state.flipped === false){
       this.setState(() => ({
@@ -63,6 +76,10 @@ class Quiz extends Component {
       }))
     }
   }
+  /*
+    * Handles voting on comment
+    * Resets state
+  */
   reset = () => {
     this.setState(() => ({
       score: 0,

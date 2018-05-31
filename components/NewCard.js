@@ -19,16 +19,31 @@ class NewCard extends Component {
     question: '',
     answer: ''
   }
+  /*
+    * Handles question input change
+    * text - question string
+    * Updates state to match input for question
+  */
   handleQuestionChange = (text) => {
     this.setState(() => ({
       question: text
     }))
   }
+  /*
+    * Handles answer input change
+    * text - answer string
+    * Updates state to match input for answer
+  */
   handleAnswerChange = (text) => {
     this.setState(() => ({
       answer: text
     }))
   }
+  /*
+    * Handles submission
+    * Creates new card and deck objects
+    * Submits updated deck object to store and AsyncStorage
+  */
   handlePress = () => {
     const { question, answer } = this.state
     const { deck } = this.props.navigation.state.params
@@ -51,6 +66,10 @@ class NewCard extends Component {
     }))
     this.toHome()
   }
+  /*
+    * Handles routing
+    * Goes back to previous screen on stack
+  */
   toHome = () => {
     this.props.navigation.dispatch(NavigationActions.back())
   }

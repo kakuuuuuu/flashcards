@@ -6,6 +6,18 @@ import {
   REMOVE_DECK
 } from '../actions'
 
+/*
+  * DECK REDUCER
+  * RECEIVE_DECKS -
+    * Add all decks to store
+  * ADD_DECK -
+    * Add new deck to store
+  * ADD_CARD -
+    * Updates deck's card array with new card
+  * REMOVE_DECK -
+    * Removes deck from store
+*/
+
 function decks (state = {}, action) {
   const { deck, card, id, decks } = action
   switch(action.type) {

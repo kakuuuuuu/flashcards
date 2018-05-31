@@ -15,7 +15,6 @@ export default function DeckPreview ({ name, cards }) {
   )
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

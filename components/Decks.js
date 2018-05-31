@@ -7,7 +7,11 @@ import { fetchDecks } from '../utils/api'
 import { receiveDecks } from '../actions'
 
 class Decks extends Component {
-
+  /*
+    * Template for list
+    * item - deck object
+    * View for use in FlatList
+  */
   renderItem = ({ item }) => {
     return (
       <View style={styles.item}>

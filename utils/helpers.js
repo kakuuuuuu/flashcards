@@ -3,15 +3,25 @@ import { Notifications, Permissions } from 'expo'
 
 const NOTIFICATION_KEY ='Flashcards:notifications'
 
+/*
+  * Shuffles array
+  * array - list of questions
+  * returns shuffled arrays
+*/
 export function Shuffle (array) {
   return array.sort(function() { return 0.5 - Math.random() });
 }
 
+/*
+  * Clears any local notifications
+*/
 export function clearLocalNotification () {
   return AsyncStorage.removeItem(NOTIFICATION_KEY)
     .then(Notifications.cancelAllScheduledNotificationsAsync())
 }
-
+/*
+  * Creates notification object
+*/
 function createNotification () {
   return {
     title: 'Quiz Yourself!',
@@ -27,7 +37,12 @@ function createNotification () {
     }
   }
 }
-
+/*
+  * Sets local notification
+  * asks for permission if never done before
+  * when granted sets time to 8PM of the next day
+  * set to repeat daily
+*/
 export function setLocalNotification () {
   AsyncStorage.getItem(NOTIFICATION_KEY)
     .then(JSON.parse)

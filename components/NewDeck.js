@@ -11,12 +11,20 @@ class NewDeck extends Component {
   state = {
     deckName: ''
   }
-
+  /*
+    * Handles input change
+    * text - deck name
+    * Updates state to match input
+  */
   handleInputChange = (text) => {
     this.setState(() => ({
       deckName: text
     }))
   }
+  /*
+    * Handles submission
+    * Creates new deck object and data object to save to store and AsyncStorage
+  */
   handlePress = () => {
     const { deckName } = this.state
     const deck = {
@@ -35,6 +43,11 @@ class NewDeck extends Component {
     }))
     this.toDeck(deck)
   }
+  /*
+    * Handles Routing
+    * deck - deck object to be passed to new stack
+    * Changes tab and adds deck to stack navigation
+  */
   toDeck = (deck) => {
     const navAction = NavigationActions.reset({
       index: 1,

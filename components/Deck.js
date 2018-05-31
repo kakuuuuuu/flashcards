@@ -1,15 +1,23 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native'
-import { gray, blue, white, black } from '../utils/colors'
+import { gray, blue, white, black, red } from '../utils/colors'
+import { removeDeck } from '../utils/api'
+import { deleteDeck } from '../actions'
+import { NavigationActions } from 'react-navigation'
 
 class Deck extends Component {
   static navigationOptions = ({ navigation }) => {
     const { deck } = navigation.state.params
-
     return {
       title: deck.name
     }
+  }
+  handleDelete = () => {
+    const { deck } = this.props
+    removeDeck(deck.name)
+      .then(this.props.remove(deck.name))
+      .then(this.props.navigation.dispatch(NavigationActions.back()))
   }
   render(){
     const { deck } = this.props
@@ -29,20 +37,25 @@ class Deck extends Component {
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-          style={Platform.OS === 'ios' ? [styles.iosSubmitBtn, styles.addBtn] : [styles.androidSubmitBtn, styles.addBtn]}
+          style={Platform.OS === 'ios' ? [styles.iosBtn, styles.addBtn] : [styles.androidBtn, styles.addBtn]}
           onPress={() => this.props.navigation.navigate(
               'NewCard',
               {deck: deck}
             )}>
-            <Text style={[styles.BtnText, styles.addBtnText]}>Add Card</Text>
+            <Text style={[styles.BtnText, styles.whiteText]}>Add Card</Text>
           </TouchableOpacity>
           <TouchableOpacity
-          style={Platform.OS === 'ios' ? [styles.iosSubmitBtn, styles.quizBtn] : [styles.androidSubmitBtn, styles.quizBtn]}
+          style={Platform.OS === 'ios' ? [styles.iosBtn, styles.quizBtn] : [styles.androidBtn, styles.quizBtn]}
           onPress={() => this.props.navigation.navigate(
               'Quiz',
               {deck: deck}
             )}>
             <Text style={[styles.BtnText, styles.quizBtnText]}>Start Quiz</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+          style={Platform.OS === 'ios' ? [styles.iosBtn, styles.deleteBtn] : [styles.androidBtn, styles.deleteBtn]}
+          onPress={this.handleDelete}>
+            <Text style={[styles.BtnText, styles.whiteText]}>Delete</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -52,7 +65,7 @@ class Deck extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 2,
+    flex: 1,
     justifyContent: 'center',
     alignSelf: 'center',
   },
@@ -69,7 +82,7 @@ const styles = StyleSheet.create({
     color: gray,
     alignSelf: 'center'
   },
-  iosSubmitBtn:{
+  iosBtn:{
     padding: 10,
     borderRadius: 7,
     height: 45,
@@ -80,7 +93,7 @@ const styles = StyleSheet.create({
     height: 60,
     justifyContent: 'center'
   },
-  androidSubmitBtn:{
+  androidBtn:{
     width: 200,
     marginTop: 20,
     marginRight: 10,
@@ -100,11 +113,14 @@ const styles = StyleSheet.create({
     backgroundColor: white,
     borderColor: black
   },
+  deleteBtn: {
+    backgroundColor: red
+  },
   BtnText: {
     fontSize: 22,
     textAlign: 'center',
   },
-  addBtnText: {
+  whiteText: {
     color: white,
   },
   quizBtnText: {
@@ -117,7 +133,13 @@ function mapStateToProps (decks, ownProps) {
     deck: decks[ownProps.navigation.state.params.deck.name]
   }
 }
+function mapDispatchToProps (dispatch) {
+  return {
+    remove: (id) => dispatch(deleteDeck(id))
+  }
+}
 
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Deck)

@@ -33,12 +33,17 @@ class NewDeck extends Component {
     this.setState(() => ({
       deckName: ''
     }))
-    this.toHome()
+    this.toDeck(deck)
   }
-  toHome = () => {
-    this.props.navigation.dispatch(NavigationActions.back({
-      key: 'NewDeck'
-    }))
+  toDeck = (deck) => {
+    const navAction = NavigationActions.reset({
+      index: 1,
+      actions: [
+        NavigationActions.navigate({ routeName: 'Home', action: NavigationActions.navigate({ 'routeName': 'Decks' }) }),
+        NavigationActions.navigate({ routeName: 'Deck', params: { deck: deck }}),
+      ]
+    });
+    this.props.navigation.dispatch(navAction);
   }
 
   render(){
@@ -114,11 +119,6 @@ const styles = StyleSheet.create({
   },
 })
 
-function mapStateToProps(decks){
-  return {
-    decks
-  }
-}
 
 function mapDispatchToProps(dispatch){
   return {
@@ -127,6 +127,6 @@ function mapDispatchToProps(dispatch){
 }
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(NewDeck)

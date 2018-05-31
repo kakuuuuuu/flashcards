@@ -2,22 +2,11 @@ import { combineReducers } from 'redux'
 import {
   RECEIVE_DECKS,
   ADD_DECK,
-  ADD_CARD
+  ADD_CARD,
+  REMOVE_DECK
 } from '../actions'
 
-const INITIAL_STATE = {
-  Test: {
-    name: 'Test',
-    cards: [
-      {
-        question: 'Is the cake a lie?',
-        answer: 'Hell yeah'
-      }
-    ]
-  }
-}
-
-function decks (state = INITIAL_STATE, action) {
+function decks (state = {}, action) {
   const { deck, card, id, decks } = action
   switch(action.type) {
     case RECEIVE_DECKS:
@@ -41,6 +30,10 @@ function decks (state = INITIAL_STATE, action) {
           ]
         }
       }
+    case REMOVE_DECK:
+    let newState = Object.assign({}, state) // assuming you use Object.assign() polyfill!
+    delete newState[id] // shallowly mutating a shallow copy is fine
+    return newState
     default:
       return state
   }

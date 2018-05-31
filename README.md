@@ -11,6 +11,16 @@ Below you'll find information about performing common tasks. The most recent ver
   * [npm run ios](#npm-run-ios)
   * [npm run android](#npm-run-android)
   * [npm run eject](#npm-run-eject)
+* [What you're getting](#what-you're-getting)
+* [Components](#components)
+  * [App.js](#app)
+  * [Decks.js](#decks)
+  * [DeckPreview.js](#deckpreview)
+  * [Deck.js](#deck)
+  * [Quiz.js](#quiz)
+  * [NewDeck.js](#newdeck)
+  * [NewCard.js](#newcard)
+* [AsyncStorage](#asyncstorage)
 * [Writing and Running Tests](#writing-and-running-tests)
 * [Environment Variables](#environment-variables)
   * [Configuring Packager IP Address](#configuring-packager-ip-address)
@@ -80,6 +90,138 @@ Like `npm start`, but also attempts to open your app on a connected Android devi
 This will start the process of "ejecting" from Create React Native App's build scripts. You'll be asked a couple of questions about how you'd like to build your project.
 
 **Warning:** Running eject is a permanent action (aside from whatever version control system you use). An ejected app will require you to have an [Xcode and/or Android Studio environment](https://facebook.github.io/react-native/docs/getting-started.html) set up.
+
+## What You're Getting
+```bash
+├── README.md - This file.
+├── package.json # npm package manager file. It's unlikely that you'll need to modify this.
+└── actions
+    └── index.js
+└── components
+    ├── Deck.js # Single deck component to access adding cards/quizzing/deleting
+    ├── DeckPreview.js # Preview component to be used with FlatList view to show all decks
+    ├── Decks.js # Home tab component that houses FlatList of all decks
+    ├── NewCard.js # Stack component to create new card
+    ├── NewDeck.js # Tab component to create new deck
+    └── Quiz.js # Stack component to quiz all cards in deck
+└── reducers
+    └── index.js
+└── utils
+    ├── api.js
+    ├── colors.js
+    └── helpers.js
+├── App.js # This is the root of your app. Contains navbar and modal for creating a new post
+└── App.test.js # Used for testing. Provided with Create React App. Testing is encouraged, but not required.
+```
+## Components
+
+Created a separate subdirectory to organize which files were components.  Descriptions of each individual component are as follows:
+
+### App.js
+
+Base component that sets up the navigation for the rest of the components.  Contains a StatusBar, StackNavigator and a nested TabNavigator.  This component also sets up the Provider and store for Redux.
+- categories: Array containing all category objects
+- posts: Array containing all post objects
+- getAllPosts: Fetches all posts from store
+- getAllCategories: Fetches all categories from store
+- submitPost: Dispatch action to create new post
+
+### Decks.js
+
+Default home component used in the TabNavigator.  Contains a FlatList using an array of decks fetched from the Redux store and loads data from AsyncStorage upon mounting.  Each item in the array renders a DeckPreview component.  This component has the following props:
+- decks: Array of deck objects fetched from the store.
+- getDecks: Calls action creator that uses data returned from AsyncStorage to load the store.
+
+### DeckPreview.js
+
+Pure component used in Decks.js to display name and card count of a deck for use in a FlatList.  This component is a TouchableOpacity that will open a detailed stack view when touched.  This component has the following props:
+- name: Name of deck.
+- cards: Array of cards.
+
+### Deck.js
+
+Component used to access detailed options for an individual deck.  Displays name, card count and the following buttons: Add Card, Quiz and Delete.  Add Card will open a NewCard stack view, Quiz will open a Quiz stack view and delete will remove the deck from AsyncStorage and the store.  This component has the following props:
+- deck: Deck object fetched from store (used in place of deck provided by params to show accurate update when card is added).
+- remove: Calls action creator that removes deck from the store by id.
+- handleDelete: Function to delete deck from AsyncStorage, remove from the store and go back to previous stack.
+
+### Quiz.js
+
+Component that individually displays all current cards in a deck.  Upon mounting cards array is stored in state and shuffled.  Initially component prompts the user with the first card's question with a button to reveal the answer.  Touching the button will show the answer string and prompt the user to touch either correct or incorrect buttons.  Touching either button hides both and reveals a next button, which will show the next card.  When the user has gone through all the cards, the score will show and prompt the user to touch the restart or go back button.  Restart will reset the quiz and go back will go back to the main deck view.  This component is provided the following data:
+- deck: Deck object provided by the StackNavigator as a parameter.
+
+### NewDeck.js
+
+Component accessed through the TabNavigator.  Contains a TextInput and button.  String from the TextInput is used to create a deck object with an empty cards array, which is saved to AsyncStorage and Redux Store.  This component has the following props, functions:
+- submit: Calls action creator to submit deck object to redux store.
+- handleInputChange: Updates state to match string in TextInput.
+- handlePress: Creates deck object and saves to AsyncStorage and Store, then calls toDeck.
+- toDeck: Opens stack view for new deck and changes back route to Decks.js.
+
+### NewCard.js
+
+Component accessed via Deck.js as a stack.  Contains two TextInputs and a button.  Strings from the TextInputs are used to create a card object, which is added to a copy of the deck object provided from the previous stack.  This new deck object is used to update AsyncStorage and the store. This component has the following props, functions:
+- deck: Deck object provided by the StackNavigator as a parameter.
+- submit: Calls action creator to submit new deck object to redux store.
+- handleQuestionChange: Updates state to match question string in TextInput.
+- handleAnswerChange: Updates state to match answer string in TextInput.
+- handlePress: Creates new deck object with added card and saves to AsyncStorage and Store, then calls toDeck
+- toHome: Goes back to previous stack view (Deck.js).
+
+## AsyncStorage
+
+The provided file [`API.js`](src/utils/API.js) contains the methods you will need to perform necessary operations on the backend:
+
+* [`fetchDecks`](#fetchdecks)
+* [`submitDeck`](#submitdeck)
+* [`submitCard`](#submitpost)
+* [`removeDeck`](#removedeck)
+
+### `fetchDecks`
+
+Method Signature:
+
+```js
+fetchDecks()
+```
+
+* Returns a Promise which resolves to a JSON object containing a collection of deck objects.
+* This collection represents the decks in your app.
+
+### `submitDecks`
+
+Method Signature:
+
+```js
+submitDecks({ deck, key })
+```
+
+* deck: `<Object>`
+* key: `<String>`
+* Returns a Promise which resolves to a JSON object containing a deck object to be added to store.
+
+### `submitDecks`
+
+Method Signature:
+
+```js
+submitCard({ deck, key })
+```
+
+* deck: `<Object>`
+* key: `<String>`
+* Returns a Promise which resolves to a JSON object containing a deck object to be updated in store.
+
+### `removeDeck`
+
+Method Signature:
+
+```js
+removeDeck(key)
+```
+
+* key: `<String>`
+* Returns a Promise which resolves to a JSON object containing a deck object to be removed in store.
 
 ## Customizing App Display Name and Icon
 
